@@ -6,7 +6,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net"
-	nurl "net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -24,6 +23,11 @@ const (
 type Config struct {
 	MigrationsTable  string
 	StatementTimeout time.Duration
+	Host             string
+	Port             string
+	Scheme           string
+	Username         string
+	Password         string
 }
 
 type Ignite struct {
@@ -36,6 +40,10 @@ func init() {
 	database.Register("ignite", &Ignite{})
 }
 
+func ConnectDB(cfg *Config) (database.Driver, error) {
+	return (&Ignite{Cfg: cfg}).Open("")
+}
+
 func (I *Ignite) Close() error {
 	I.client.CacheDestroy(cacheName)
 	return I.client.Close()
@@ -46,41 +54,37 @@ func (I *Ignite) Open(url string) (database.Driver, error) {
 		return nil, errors.New("cfg variable is not initialized")
 	} else if I.Cfg.MigrationsTable == "" {
 		return nil, errors.New("migrationsTable must be filled")
+	} else if I.Cfg.Host == "" {
+		return nil, errors.New("host must be filled")
 	}
 
-	purl, err := nurl.Parse(url)
-	if err != nil {
-		return nil, fmt.Errorf("error parse url: %w", err)
-	}
-
-	port, err := strconv.Atoi(purl.Port())
+	port, err := strconv.Atoi(I.Cfg.Port)
 	if err != nil {
 		return nil, fmt.Errorf("bad port: %w", err)
 	}
 
-	username := purl.Query().Get("Username")
+	//username := purl.Query().Get("Username")
 	//if username = purl.Query().Get("Username"); username == "" {
 	//	return nil, errors.New("username must be filled")
 	//}
 
-	password := purl.Query().Get("Password")
+	//password := purl.Query().Get("Password")
 	//if password := purl.Query().Get("Password"); password == "" {
 	//	return nil, errors.New("password must be filled")
 	//}
 
-	scheme := ""
-	if scheme = purl.Query().Get("Scheme"); scheme == "" {
+	if I.Cfg.Scheme == "" {
 		return nil, errors.New("scheme must be filled")
 	}
 
 	I.client, err = ignite.Connect(ignite.ConnInfo{
-		Network:  scheme,
-		Host:     purl.Hostname(),
+		Network:  I.Cfg.Scheme,
+		Host:     I.Cfg.Host,
 		Port:     port,
 		Major:    1,
 		Minor:    1,
-		Username: username,
-		Password: password,
+		Username: I.Cfg.Username,
+		Password: I.Cfg.Password,
 		Dialer: net.Dialer{
 			Timeout: I.Cfg.StatementTimeout,
 		},

@@ -1,7 +1,6 @@
 package ignite
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -20,13 +19,13 @@ var (
 )
 
 func TestMigrate(t *testing.T) {
-	addr := fmt.Sprintf("ignite://%s:%s?&Scheme=tcp", "localhost", "10800")
-	d, err := (&Ignite{
-		Cfg: &Config{
-			MigrationsTable:  "schema_migrations",
-			StatementTimeout: 10 * time.Second,
-		},
-	}).Open(addr)
+	d, err := ConnectDB(&Config{
+		MigrationsTable:  "schema_migrations",
+		StatementTimeout: 10 * time.Second,
+		Host:             "localhost",
+		Port:             "10800",
+		Scheme:           "tcp",
+	})
 
 	if err != nil {
 		t.Fatal(err)
@@ -43,15 +42,20 @@ func TestMigrate(t *testing.T) {
 	}
 	dt.TestMigrate(t, m)
 
-	// todo: пока так, надо будетпотом разобраться
+	// todo: пока так, надо будет потом разобраться c тестированием через докер
 	return
 	dktesting.ParallelTest(t, specs, func(t *testing.T, c dktest.ContainerInfo) {
 		ip, port, err := c.FirstPort()
 		if err != nil {
 			t.Fatal(err)
 		}
-		addr := fmt.Sprintf("ignite://%s:%s?Scheme=tcp", ip, port)
-		d, err := new(Ignite).Open(addr)
+		d, err := ConnectDB(&Config{
+			MigrationsTable:  "schema_migrations",
+			StatementTimeout: 10 * time.Second,
+			Host:             ip,
+			Port:             port,
+			Scheme:           "tcp",
+		})
 
 		if err != nil {
 			t.Fatal(err)
@@ -61,6 +65,7 @@ func TestMigrate(t *testing.T) {
 				t.Error(err)
 			}
 		}()
+
 		m, err := migrate.NewWithDatabaseInstance("file://./examples/migrations", "", d)
 		if err != nil {
 			t.Fatal(err)
