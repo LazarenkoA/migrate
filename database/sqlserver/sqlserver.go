@@ -13,9 +13,9 @@ import (
 	"go.uber.org/atomic"
 
 	"github.com/Azure/go-autorest/autorest/adal"
+	"github.com/LazarenkoA/migrate"
+	"github.com/LazarenkoA/migrate/database"
 	mssql "github.com/denisenkom/go-mssqldb" // mssql support
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/hashicorp/go-multierror"
 )
 

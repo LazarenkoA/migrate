@@ -6,11 +6,11 @@ import (
 	"errors"
 	"log"
 
-	"github.com/golang-migrate/migrate/v4"
+	"github.com/LazarenkoA/migrate"
 	"github.com/markbates/pkger"
 
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/pkger"
+	_ "github.com/LazarenkoA/migrate/database/postgres"
+	_ "github.com/LazarenkoA/migrate/source/pkger"
 	_ "github.com/lib/pq"
 )
 

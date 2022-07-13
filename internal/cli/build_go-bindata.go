@@ -4,5 +4,5 @@
 package cli
 
 import (
-	_ "github.com/golang-migrate/migrate/v4/source/go_bindata"
+	_ "github.com/LazarenkoA/migrate/source/go_bindata"
 )

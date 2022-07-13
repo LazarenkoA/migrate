@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/LazarenkoA/migrate/database"
 	"github.com/amsokol/ignite-go-client/binary/v1"
-	"github.com/golang-migrate/migrate/v4/database"
 	"go.uber.org/atomic"
 )
 

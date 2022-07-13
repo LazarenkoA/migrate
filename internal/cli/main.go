@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database"
-	"github.com/golang-migrate/migrate/v4/source"
+	"github.com/LazarenkoA/migrate"
+	"github.com/LazarenkoA/migrate/database"
+	"github.com/LazarenkoA/migrate/source"
 )
 
 const (

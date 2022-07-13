@@ -16,9 +16,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database"
-	"github.com/golang-migrate/migrate/v4/database/multistmt"
+	"github.com/LazarenkoA/migrate"
+	"github.com/LazarenkoA/migrate/database"
+	"github.com/LazarenkoA/migrate/database/multistmt"
 	multierror "github.com/hashicorp/go-multierror"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
