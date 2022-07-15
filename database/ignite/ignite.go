@@ -101,6 +101,7 @@ func (I *Ignite) Open(url string) (database.Driver, error) {
 }
 
 func (I *Ignite) Lock() error {
+	// возможно нужно тут использовать CachePutIfAbsent, но это не точно
 	return database.CasRestoreOnErr(&I.isLocked, false, true, database.ErrNotLocked, func() error { return nil })
 }
 
